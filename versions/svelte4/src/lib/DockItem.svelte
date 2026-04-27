@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { interpolate } from 'popmotion';
-	import type { AppID } from 'src/types';
+	import type { DockApp } from 'src/types';
 	import { spring } from 'svelte/motion';
 
-	export let appID: AppID;
+	export let app: DockApp;
 	export let mouseX: number | null;
+	export let index: number;
 
 	let el: HTMLImageElement;
 
@@ -41,6 +42,7 @@
 
 	let width: string;
 	$: width = `${$widthPX / 16}rem`;
+	$: dropDelay = `${index * 90}ms`;
 
 	function animate() {
 		if (el && mouseX !== null) {
@@ -52,37 +54,33 @@
 			distance = beyondTheDistanceLimit;
 		}
 
-		// Request the next frame
 		requestAnimationFrame(animate);
 	}
 
-	// Start the animation loop
+	function openApp() {
+		window.open(app.url, '_blank', 'noopener,noreferrer');
+	}
+
 	animate();
 </script>
 
-<section>
-	<button class="dock-button">
-		<img
-			bind:this={el}
-			class="app-icon"
-			src="/app-icons/{appID}/256.png"
-			alt=""
-			style="width: {width};"
-		/>
+<section class="dock-item" style="--drop-delay: {dropDelay};">
+	<button class="dock-button" aria-label={app.name} title={app.name} on:click={openApp}>
+		<img bind:this={el} class="app-icon" src={app.imageUrl} alt={app.name} style="width: {width};" />
 	</button>
 </section>
 
 <style>
+	.dock-item {
+		animation: app-drop-in 760ms cubic-bezier(0.2, 0.95, 0.18, 1) var(--drop-delay) both;
+	}
+
 	.dock-button {
 		height: 100%;
 		width: auto !important;
-
 		cursor: default !important;
-
 		transition: all 200ms ease-in;
-
 		transform-origin: bottom;
-
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
@@ -92,27 +90,18 @@
 		color: inherit;
 		text-decoration: none;
 		vertical-align: middle;
-
 		border: 0;
 		border-radius: 0;
-
 		outline: 0;
-
 		margin: 0;
 		padding: 0;
-
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-
 		position: relative;
-
 		user-select: none;
-
 		appearance: none;
-
 		background-color: transparent;
-
 		-webkit-tap-highlight-color: transparent;
 
 		&:not(:disabled) {
@@ -123,5 +112,23 @@
 	.app-icon {
 		width: 57.6px;
 		height: auto;
+	}
+
+	@keyframes app-drop-in {
+		0% {
+			transform: translateY(-100vh) scale(0.72);
+			opacity: 0;
+		}
+		72% {
+			transform: translateY(12px) scale(1.08);
+			opacity: 1;
+		}
+		88% {
+			transform: translateY(-5px) scale(0.97);
+		}
+		100% {
+			transform: translateY(0) scale(1);
+			opacity: 1;
+		}
 	}
 </style>

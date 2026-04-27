@@ -1,13 +1,6 @@
-export type AppID =
-	| 'finder'
-	| 'launchpad'
-	| 'safari'
-	| 'messages'
-	| 'mail'
-	| 'maps'
-	| 'photos'
-	| 'facetime'
-	| 'calendar'
-	| 'system-preferences'
-	| 'purus-twitter'
-	| 'view-source';
+export type DockApp = {
+	id: string;
+	name: string;
+	url: string;
+	imageUrl: string;
+};
