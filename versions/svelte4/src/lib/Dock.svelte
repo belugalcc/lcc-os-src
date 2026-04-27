@@ -69,8 +69,8 @@
 		on:mousemove={(event) => (mouseX = event.x)}
 		on:mouseleave={() => (mouseX = null)}
 	>
-		{#each apps as app, index}
-			<DockItem {mouseX} {app} {index} />
+		{#each apps as app}
+			<DockItem {mouseX} {app} />
 		{/each}
 	</div>
 </section>
@@ -100,21 +100,5 @@
 		height: 100%;
 		display: flex;
 		align-items: flex-end;
-		animation: dock-bounce-in 900ms cubic-bezier(0.15, 1.25, 0.2, 1) 900ms both;
-	}
-
-	@keyframes dock-bounce-in {
-		0% {
-			transform: translateY(120px) scaleX(0.94);
-		}
-		60% {
-			transform: translateY(-16px) scaleX(1.03);
-		}
-		80% {
-			transform: translateY(6px) scaleX(0.99);
-		}
-		100% {
-			transform: translateY(0) scaleX(1);
-		}
 	}
 </style>
